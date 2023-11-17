@@ -2,6 +2,8 @@
 // algocli application
 package steps
 
+import "github.com/smekuria1/algocli/cmd/userinput"
+
 type StepSchema struct {
 	StepName string
 	Options  []Item
@@ -23,7 +25,8 @@ type Options struct {
 	AlgorithmType string
 	AlgorithmName string
 	DataType      string
-	DataName      string
+	DataName      *userinput.Output
+	DataSize      *userinput.Output
 }
 
 // InitSteps initializes the steps and returns a pointer to the steps
@@ -78,4 +81,32 @@ func InitSteps(option *Options) *Steps {
 		},
 	}
 	return steps
+}
+
+func InitSecondSteps(option *Options) *Steps {
+	secondSteps := &Steps{
+		[]StepSchema{
+			{
+				StepName: "Input Data Type Selection",
+				Options: []Item{
+					{
+						Title: "Input Integers",
+						Desc:  "Input Integers is a data type that allows the user to input a list of integers.",
+					},
+					{
+						Title: "Random Integers",
+						Desc:  "Random Integers is a data type that generates a list of random integers.",
+					},
+					{
+						Title: "Random Floats",
+						Desc:  "Random Floats is a data type that generates a list of random floats.",
+					},
+				},
+				Headers: "Select an option",
+				Field:   &option.DataType,
+			},
+		},
+	}
+	return secondSteps
+
 }

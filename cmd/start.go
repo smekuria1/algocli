@@ -29,6 +29,7 @@ import (
 	multiinput "github.com/smekuria1/algocli/cmd/multiInput"
 	"github.com/smekuria1/algocli/cmd/program"
 	"github.com/smekuria1/algocli/cmd/steps"
+	"github.com/smekuria1/algocli/cmd/userinput"
 	"github.com/spf13/cobra"
 )
 
@@ -54,7 +55,7 @@ var startCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var tprogram *tea.Program
 		options := steps.Options{
-			AlgorithmType: "Binary Search",
+			AlgorithmType: "",
 		}
 		//flagAlgorithm := cmd.Flag("algorithm").Value.String()
 		// if flagAlgorithm != "" {
@@ -66,9 +67,9 @@ var startCmd = &cobra.Command{
 			Name: options.AlgorithmType,
 		}
 
-		steps := steps.InitSteps(&options)
+		firststep := steps.InitSteps(&options)
 		fmt.Println(logoStyle.Render(logo))
-		for _, step := range steps.Steps {
+		for _, step := range firststep.Steps {
 			s := &multiinput.Selection{}
 			tprogram = tea.NewProgram(multiinput.InitialModel(step.Options, s, step.Headers, algorithm))
 			if _, err := tprogram.Run(); err != nil {
@@ -80,9 +81,51 @@ var startCmd = &cobra.Command{
 
 		}
 		fmt.Println(endingMsgStyle.Render("You have selected: " + options.AlgorithmType))
-		fmt.Println(endingMsgStyle.Render("Thanks for using algocli!"))
+		secondOptions := steps.Options{
+			DataType: "",
+			DataName: &userinput.Output{},
+			DataSize: &userinput.Output{},
+		}
+		secondSteps := steps.InitSecondSteps(&secondOptions)
+		for _, step := range secondSteps.Steps {
+			s := &multiinput.Selection{}
+			tprogram = tea.NewProgram(multiinput.InitialModel(step.Options, s, step.Headers, algorithm))
+			if _, err := tprogram.Run(); err != nil {
+				cobra.CheckErr(err)
+			}
+			algorithm.ExitCli(tprogram)
+			*step.Field = s.Choice
+			algorithm.Data.Name = s.Choice
+		}
+
+		if algorithm.Data.Name == "Input Integers" {
+			tprogram = tea.NewProgram(
+				userinput.InitialTextInputModel(secondOptions.DataName, "Enter integers", algorithm),
+			)
+			if _, err := tprogram.Run(); err != nil {
+				cobra.CheckErr(err)
+				userinput.CreateErrorInputModel(err)
+			}
+			algorithm.ExitCli(tprogram)
+			algorithm.Data.Value = secondOptions.DataName.Output
+
+		} else if algorithm.Data.Name == "Random Integers" {
+			tprogram = tea.NewProgram(
+				userinput.InitialTextInputModel(secondOptions.DataSize, "Enter number of integers", algorithm),
+			)
+			if _, err := tprogram.Run(); err != nil {
+				cobra.CheckErr(err)
+				userinput.CreateErrorInputModel(err)
+			}
+			algorithm.ExitCli(tprogram)
+			algorithm.Data.Size = secondOptions.DataSize.OutputInt
+
+		}
+		fmt.Println(endingMsgStyle.Render("You have selected: " + algorithm.Data.Name))
+
 		algorithm.Run()
 
+		fmt.Println(endingMsgStyle.Render("Thanks for using algocli!"))
 	},
 }
 
