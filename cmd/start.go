@@ -124,13 +124,12 @@ var startCmd = &cobra.Command{
 		fmt.Println(endingMsgStyle.Render("You have selected: " + algorithm.Data.Name))
 
 		algorithm.Run()
-
+		fmt.Println()
 		fmt.Println(endingMsgStyle.Render("Thanks for using algocli!"))
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(startCmd)
-	rootCmd.Flags().StringP("algorithm", "a", "", "Select an algorithm")
 
 }

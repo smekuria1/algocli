@@ -35,7 +35,7 @@ var rootCmd = &cobra.Command{
 
 	It was created by Solomon Mekuria, a graduate student at the Wentworth Institute of Technology in Boston, MA.
 	Algocli is open source and free to use. 
-	If you would like to contribute to the project, please visit the github page at github.com/smekura1/algocli.
+	If you would like to contribute to the project, please visit the github page at github.com/smekuria1/algocli.
 	
 	
 	`,

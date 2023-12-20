@@ -11,13 +11,17 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/smekuria1/GoSlow/binarysearchtree"
+	"github.com/smekuria1/GoSlow/hashtable"
 	"github.com/smekuria1/GoSlow/queue"
 )
 
-var sliceStyle = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("30")).Bold(true)
-var preorderStyle = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("31")).Bold(true)
-var inorderStyle = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("32")).Bold(true)
-var postorderStyle = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("33")).Bold(true)
+var (
+	sliceStyle     = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("30")).Bold(true)
+	preorderStyle  = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("31")).Bold(true)
+	inorderStyle   = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("32")).Bold(true)
+	postorderStyle = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("33")).Bold(true)
+	endingMsgStyle = lipgloss.NewStyle().PaddingLeft(1).Foreground(lipgloss.Color("170")).Bold(true)
+)
 
 // Algorithm is the struct that holds the algorithm data to be run
 type Algorithm struct {
@@ -89,5 +93,25 @@ func (a *Algorithm) Run() {
 			q.Enqueue(randint)
 		}
 		PrettyPrinQueue(q)
+	} else if a.Name == "Hashtable" {
+		if a.Data.Name == "Random Integers" {
+			size := 16
+			if a.Data.Size > 16 {
+				size = a.Data.Size
+			}
+
+			hashtable := hashtable.NewHashTable[int, int](size, 0.75)
+			for i := 0; i < a.Data.Size; i++ {
+				randint := rand.Intn(100)
+				hashtable.Put(randint, i)
+			}
+
+			prettyprinted, _ := PrettyPrintHashtable(hashtable.ToString())
+			fmt.Println((sliceStyle.Render(prettyprinted)))
+
+		} else if a.Data.Name == "Input Integers" {
+			fmt.Print(endingMsgStyle.Render("\nData type not implemented yet \n Sorry for the inconvenience reach out on github if you want this data type implemented \n"))
+		}
+
 	}
 }

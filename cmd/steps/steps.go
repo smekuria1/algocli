@@ -44,6 +44,11 @@ func InitSteps(option *Options) *Steps {
 						Title: "Queue",
 						Desc:  "Queue is a data structure that allows for FIFO (First In First Out) operations.",
 					},
+
+					{
+						Title: "Hashtable",
+						Desc:  "Hashtable is a data structure that implements an associative array, also called a dictionary, which is an abstract data type that maps keys to values. ",
+					},
 				},
 				Headers: "Select an option",
 				Field:   &option.AlgorithmType,
@@ -96,10 +101,6 @@ func InitSecondSteps(option *Options) *Steps {
 					{
 						Title: "Random Integers",
 						Desc:  "Random Integers is a data type that generates a list of random integers.",
-					},
-					{
-						Title: "Random Floats",
-						Desc:  "Random Floats is a data type that generates a list of random floats.",
 					},
 				},
 				Headers: "Select an option",
